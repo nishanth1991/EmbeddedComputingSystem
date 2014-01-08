@@ -1,0 +1,679 @@
+C51 COMPILER V9.00   ABCD                                                                  05/03/2012 20:10:45 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE ABCD
+OBJECT MODULE PLACED IN abcd.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE abcd.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg51.h>
+   2          #define port P1
+   3          #define dataport P2  // Dataport for lcd
+   4          #define key P0  // Port for keypad
+   5          #define sec 100
+   6          sbit rs = port^0;
+   7          sbit rw = port^1;
+   8          sbit en = port^2;
+   9          
+  10          sbit col1=key^4;
+  11          sbit col2=key^5;
+  12          sbit col3=key^6;
+  13          sbit row1=key^0;
+  14          sbit row2=key^1;
+  15          sbit row3=key^2;
+  16          sbit row4=key^3;
+  17          
+  18          void delay(unsigned int msec) //Time delay function
+  19          {
+  20   1      int i,j ;
+  21   1      for(i=0;i<msec;i++)
+  22   1        for(j=0;j<1275;j++);
+  23   1      }
+  24          
+  25          void lcd_cmd(unsigned char item) //Function to send command to LCD
+  26          {
+  27   1      dataport = item;
+  28   1      rs= 0;
+  29   1      rw=0;
+  30   1      en=1;
+  31   1      delay(1);
+  32   1      en=0;
+  33   1      return;
+  34   1      }
+  35          
+  36          void lcd_data(unsigned char item) //Funtion to send data on LCD
+  37          {
+  38   1      dataport = item;
+  39   1      rs= 1;
+  40   1      rw=0;
+  41   1      en=1;
+  42   1      delay(1);
+  43   1      en=0;
+  44   1      return;
+  45   1      }
+  46          
+  47          void lcd_data_string(unsigned char *str) // Function to send string on LCD
+  48          {
+  49   1      int i=0;
+  50   1      while(str[i]!='\0')
+  51   1      {
+  52   2        lcd_data(str[i]);
+  53   2        i++;
+  54   2        delay(10);
+  55   2      }
+C51 COMPILER V9.00   ABCD                                                                  05/03/2012 20:10:45 PAGE 2   
+
+  56   1      return;
+  57   1      }
+  58          
+  59          void lcd(unsigned char str[10])  // Funtion to Initialize LCD
+  60          {
+  61   1      lcd_cmd(0x38);
+  62   1      lcd_cmd(0x0e);
+  63   1      //delay(sec);
+  64   1      lcd_cmd(0x01);
+  65   1      //delay(sec);
+  66   1      lcd_cmd(0x82);
+  67   1      //delay(sec);
+  68   1      lcd_data_string(str);
+  69   1      }
+  70          
+  71                    void ab1()
+  72          {
+  73   1       lcd_cmd(0x38);
+  74   1      lcd_cmd(0x0e);
+  75   1      //delay(sec);
+  76   1      lcd_cmd(0x01);
+  77   1      //delay(sec);
+  78   1      lcd_cmd(0x82);
+  79   1      //delay(sec);
+  80   1      lcd_cmd(64);  //Address where values of the first custom character is stored
+  81   1      lcd_data(24);
+  82   1      lcd_data(24);
+  83   1      lcd_data(8);
+  84   1      lcd_data(8);
+  85   1      lcd_data(24);
+  86   1      lcd_data(21);
+  87   1      lcd_data(21);
+  88   1      lcd_data(31);
+  89   1      lcd_cmd(0xC0);  //Address of the location where the character is to be displayed
+  90   1      lcd_data(0);  // Displaying the character created at address 0x64 
+  91   1      delay(10);
+  92   1      
+  93   1      lcd_cmd(72);
+  94   1      lcd_data(0);
+  95   1      lcd_data(0);
+  96   1      lcd_data(0);
+  97   1      lcd_data(0);
+  98   1      lcd_data(0);
+  99   1      lcd_data(14);
+ 100   1      lcd_data(10);
+ 101   1      lcd_data(14);
+ 102   1      lcd_cmd(0x80);
+ 103   1      lcd_data(1);
+ 104   1      delay(10);
+ 105   1      
+ 106   1      lcd_cmd(80);
+ 107   1      lcd_data(2);
+ 108   1      lcd_data(2);
+ 109   1      lcd_data(30);
+ 110   1      lcd_data(20);
+ 111   1      lcd_data(21);
+ 112   1      lcd_data(21);
+ 113   1      lcd_data(21);
+ 114   1      lcd_data(31);
+ 115   1      lcd_cmd(0x82);
+ 116   1      lcd_data(2);
+ 117   1      delay(10);
+C51 COMPILER V9.00   ABCD                                                                  05/03/2012 20:10:45 PAGE 3   
+
+ 118   1      }
+ 119            void ab2()
+ 120          {
+ 121   1       lcd_cmd(0x38);
+ 122   1      lcd_cmd(0x0e);
+ 123   1      //delay(sec);
+ 124   1      lcd_cmd(0x01);
+ 125   1      //delay(sec);
+ 126   1      lcd_cmd(0x82);
+ 127   1      //delay(sec);
+ 128   1      lcd_cmd(64);  //Address where values of the first custom character is stored
+ 129   1      lcd_data(16);
+ 130   1      lcd_data(8);
+ 131   1      lcd_data(4);
+ 132   1      lcd_data(2);
+ 133   1      lcd_data(1);
+ 134   1      lcd_data(21);
+ 135   1      lcd_data(21);
+ 136   1      lcd_data(31);
+ 137   1      lcd_cmd(0xC0);  //Address of the location where the character is to be displayed
+ 138   1      lcd_data(0);  // Displaying the character created at address 0x64 
+ 139   1      delay(10);
+ 140   1      
+ 141   1      lcd_cmd(72);
+ 142   1      lcd_data(2);
+ 143   1      lcd_data(2);
+ 144   1      lcd_data(30);
+ 145   1      lcd_data(18);
+ 146   1      lcd_data(18);
+ 147   1      lcd_data(18);
+ 148   1      lcd_data(18);
+ 149   1      lcd_data(30);
+ 150   1      lcd_cmd(0x80);
+ 151   1      lcd_data(1);
+ 152   1      delay(10);
+ 153   1      
+ 154   1      lcd_cmd(80);
+ 155   1      lcd_data(1);
+ 156   1      lcd_data(1);
+ 157   1      lcd_data(31);
+ 158   1      lcd_data(17);
+ 159   1      lcd_data(19);
+ 160   1      lcd_data(17);
+ 161   1      lcd_data(21);
+ 162   1      lcd_data(31);
+ 163   1      lcd_cmd(0x82);
+ 164   1      lcd_data(2);
+ 165   1      delay(10);
+ 166   1      }
+ 167            void ab3()
+ 168          {
+ 169   1       lcd_cmd(0x38);
+ 170   1      lcd_cmd(0x0e);
+ 171   1      //delay(sec);
+ 172   1      lcd_cmd(0x01);
+ 173   1      //delay(sec);
+ 174   1      lcd_cmd(0x82);
+ 175   1      //delay(sec);
+ 176   1      lcd_cmd(64);  //Address where values of the first custom character is stored
+ 177   1      lcd_data(1);
+ 178   1      lcd_data(0);
+ 179   1      lcd_data(15);
+C51 COMPILER V9.00   ABCD                                                                  05/03/2012 20:10:45 PAGE 4   
+
+ 180   1      lcd_data(0);
+ 181   1      lcd_data(0);
+ 182   1      lcd_data(20);
+ 183   1      lcd_data(20);
+ 184   1      lcd_data(31);
+ 185   1      lcd_cmd(0xC0);  //Address of the location where the character is to be displayed
+ 186   1      lcd_data(0);  // Displaying the character created at address 0x64 
+ 187   1      delay(10);
+ 188   1      
+ 189   1      lcd_cmd(72);
+ 190   1      lcd_data(16);
+ 191   1      lcd_data(16);
+ 192   1      lcd_data(16);
+ 193   1      lcd_data(23);
+ 194   1      lcd_data(21);
+ 195   1      lcd_data(21);
+ 196   1      lcd_data(21);
+ 197   1      lcd_data(29);
+ 198   1      lcd_cmd(0x80);
+ 199   1      lcd_data(1);
+ 200   1      delay(10);
+ 201   1      
+ 202   1      lcd_cmd(80);
+ 203   1      lcd_data(4);
+ 204   1      lcd_data(4);
+ 205   1      lcd_data(28);
+ 206   1      lcd_data(21);
+ 207   1      lcd_data(21);
+ 208   1      lcd_data(21);
+ 209   1      lcd_data(21);
+ 210   1      lcd_data(31);
+ 211   1      lcd_cmd(0x82);
+ 212   1      lcd_data(2);
+ 213   1      delay(10);
+ 214   1      }
+ 215          void ab4()
+ 216          {
+ 217   1       lcd_cmd(0x38);
+ 218   1      lcd_cmd(0x0e);
+ 219   1      //delay(sec);
+ 220   1      lcd_cmd(0x01);
+ 221   1      //delay(sec);
+ 222   1      lcd_cmd(0x82);
+ 223   1      //delay(sec);
+ 224   1      lcd_cmd(64);  //Address where values of the first custom character is stored
+ 225   1      lcd_data(31);
+ 226   1      lcd_data(25);
+ 227   1      lcd_data(1);
+ 228   1      lcd_data(1);
+ 229   1      lcd_data(29);
+ 230   1      lcd_data(21);
+ 231   1      lcd_data(21);
+ 232   1      lcd_data(23);
+ 233   1      lcd_cmd(0xC0);  //Address of the location where the character is to be displayed
+ 234   1      lcd_data(0);  // Displaying the character created at address 0x64 
+ 235   1      delay(10);
+ 236   1      
+ 237   1      lcd_cmd(72);
+ 238   1      lcd_data(29);
+ 239   1      lcd_data(21);
+ 240   1      lcd_data(29);
+ 241   1      lcd_data(17);
+C51 COMPILER V9.00   ABCD                                                                  05/03/2012 20:10:45 PAGE 5   
+
+ 242   1      lcd_data(17);
+ 243   1      lcd_data(17);
+ 244   1      lcd_data(17);
+ 245   1      lcd_data(31);
+ 246   1      lcd_cmd(0x80);
+ 247   1      lcd_data(1);
+ 248   1      delay(10);
+ 249   1      
+ 250   1      lcd_cmd(112);
+ 251   1      lcd_data(31);
+ 252   1      lcd_data(21);
+ 253   1      lcd_data(21);
+ 254   1      lcd_data(0);
+ 255   1      lcd_data(0);
+ 256   1      lcd_data(0);
+ 257   1      lcd_data(0);
+ 258   1      lcd_data(0);
+ 259   1      lcd_cmd(0xC4);
+ 260   1      lcd_data(6);
+ 261   1      delay(10);
+ 262   1      }
+ 263            void ab5()
+ 264          {
+ 265   1       lcd_cmd(0x38);
+ 266   1      lcd_cmd(0x0e);
+ 267   1      //delay(sec);
+ 268   1      lcd_cmd(0x01);
+ 269   1      //delay(sec);
+ 270   1      lcd_cmd(0x82);
+ 271   1      //delay(sec);
+ 272   1      lcd_cmd(64);  //Address where values of the first custom character is stored
+ 273   1      lcd_data(31);
+ 274   1      lcd_data(21);
+ 275   1      lcd_data(21);
+ 276   1      lcd_data(1);
+ 277   1      lcd_data(1);
+ 278   1      lcd_data(21);
+ 279   1      lcd_data(21);
+ 280   1      lcd_data(31);
+ 281   1      lcd_cmd(0xC0);  //Address of the location where the character is to be displayed
+ 282   1      lcd_data(0);  // Displaying the character created at address 0x64 
+ 283   1      delay(10);
+ 284   1      
+ 285   1      lcd_cmd(72);
+ 286   1      lcd_data(1);
+ 287   1      lcd_data(31);
+ 288   1      lcd_data(17);
+ 289   1      lcd_data(17);
+ 290   1      lcd_data(21);
+ 291   1      lcd_data(31);
+ 292   1      lcd_data(4);
+ 293   1      lcd_data(7);
+ 294   1      lcd_cmd(0x80);
+ 295   1      lcd_data(1);
+ 296   1      delay(10);
+ 297   1      }
+ 298            void ab6()
+ 299          {
+ 300   1       lcd_cmd(0x38);
+ 301   1      lcd_cmd(0x0e);
+ 302   1      //delay(sec);
+ 303   1      lcd_cmd(0x01);
+C51 COMPILER V9.00   ABCD                                                                  05/03/2012 20:10:45 PAGE 6   
+
+ 304   1      //delay(sec);
+ 305   1      lcd_cmd(0x82);
+ 306   1      //delay(sec);
+ 307   1      lcd_cmd(64);  //Address where values of the first custom character is stored
+ 308   1      lcd_data(28);
+ 309   1      lcd_data(20);
+ 310   1      lcd_data(28);
+ 311   1      lcd_data(19);
+ 312   1      lcd_data(16);
+ 313   1      lcd_data(16);
+ 314   1      lcd_data(8);
+ 315   1      lcd_data(7);
+ 316   1      lcd_cmd(0xC0);  //Address of the location where the character is to be displayed
+ 317   1      lcd_data(0);  // Displaying the character created at address 0x64 
+ 318   1      delay(10);
+ 319   1      
+ 320   1      lcd_cmd(72);
+ 321   1      lcd_data(28);
+ 322   1      lcd_data(20);
+ 323   1      lcd_data(20);
+ 324   1      lcd_data(28);
+ 325   1      lcd_data(16);
+ 326   1      lcd_data(16);
+ 327   1      lcd_data(16);
+ 328   1      lcd_data(16);
+ 329   1      lcd_cmd(0x80);
+ 330   1      lcd_data(1);
+ 331   1      delay(10);
+ 332   1      
+ 333   1      lcd_cmd(80);
+ 334   1      lcd_data(4);
+ 335   1      lcd_data(28);
+ 336   1      lcd_data(20);
+ 337   1      lcd_data(21);
+ 338   1      lcd_data(21);
+ 339   1      lcd_data(21);
+ 340   1      lcd_data(21);
+ 341   1      lcd_data(31);
+ 342   1      lcd_cmd(0x82);
+ 343   1      lcd_data(2);
+ 344   1      delay(10);
+ 345   1      }
+ 346            void ab7()
+ 347          {
+ 348   1       lcd_cmd(0x38);
+ 349   1      lcd_cmd(0x0e);
+ 350   1      //delay(sec);
+ 351   1      lcd_cmd(0x01);
+ 352   1      //delay(sec);
+ 353   1      lcd_cmd(0x82);
+ 354   1      //delay(sec);
+ 355   1      lcd_cmd(64);  //Address where values of the first custom character is stored
+ 356   1      lcd_data(1);
+ 357   1      lcd_data(31);
+ 358   1      lcd_data(16);
+ 359   1      lcd_data(8);
+ 360   1      lcd_data(6);
+ 361   1      lcd_data(21);
+ 362   1      lcd_data(21);
+ 363   1      lcd_data(31);
+ 364   1      lcd_cmd(0xC0);  //Address of the location where the character is to be displayed
+ 365   1      lcd_data(0);  // Displaying the character created at address 0x64 
+C51 COMPILER V9.00   ABCD                                                                  05/03/2012 20:10:45 PAGE 7   
+
+ 366   1      delay(10);
+ 367   1      
+ 368   1      lcd_cmd(72);
+ 369   1      lcd_data(0);
+ 370   1      lcd_data(17);
+ 371   1      lcd_data(17);
+ 372   1      lcd_data(10);
+ 373   1      lcd_data(4);
+ 374   1      lcd_data(10);
+ 375   1      lcd_data(17);
+ 376   1      lcd_data(31);
+ 377   1      lcd_cmd(0x80);
+ 378   1      lcd_data(1);
+ 379   1      delay(10);
+ 380   1      
+ 381   1      lcd_cmd(80);
+ 382   1      lcd_data(0);
+ 383   1      lcd_data(0);
+ 384   1      lcd_data(4);
+ 385   1      lcd_data(4);
+ 386   1      lcd_data(4);
+ 387   1      lcd_data(4);
+ 388   1      lcd_data(4);
+ 389   1      lcd_data(28);
+ 390   1      lcd_cmd(0x82);
+ 391   1      lcd_data(2);
+ 392   1      delay(10);
+ 393   1      }
+ 394           void ab8()
+ 395          {
+ 396   1       lcd_cmd(0x38);
+ 397   1      lcd_cmd(0x0e);
+ 398   1      //delay(sec);
+ 399   1      lcd_cmd(0x01);
+ 400   1      //delay(sec);
+ 401   1      lcd_cmd(0x82);
+ 402   1      //delay(sec);
+ 403   1      lcd_cmd(64);  //Address where values of the first custom character is stored
+ 404   1      lcd_data(0);
+ 405   1      lcd_data(16);
+ 406   1      lcd_data(8);
+ 407   1      lcd_data(4);
+ 408   1      lcd_data(2);
+ 409   1      lcd_data(21);
+ 410   1      lcd_data(21);
+ 411   1      lcd_data(31);
+ 412   1      lcd_cmd(0xC0);  //Address of the location where the character is to be displayed
+ 413   1      lcd_data(0);  // Displaying the character created at address 0x64 
+ 414   1      delay(10);
+ 415   1      
+ 416   1      lcd_cmd(72);
+ 417   1      lcd_data(0);
+ 418   1      lcd_data(0);
+ 419   1      lcd_data(0);
+ 420   1      lcd_data(0);
+ 421   1      lcd_data(0);
+ 422   1      lcd_data(14);
+ 423   1      lcd_data(10);
+ 424   1      lcd_data(14);
+ 425   1      lcd_cmd(0x80);
+ 426   1      lcd_data(1);
+ 427   1      delay(10);
+C51 COMPILER V9.00   ABCD                                                                  05/03/2012 20:10:45 PAGE 8   
+
+ 428   1      
+ 429   1      lcd_cmd(80);
+ 430   1      lcd_data(27);
+ 431   1      lcd_data(17);
+ 432   1      lcd_data(17);
+ 433   1      lcd_data(27);
+ 434   1      lcd_data(17);
+ 435   1      lcd_data(21);
+ 436   1      lcd_data(21);
+ 437   1      lcd_data(31);
+ 438   1      lcd_cmd(0x82);
+ 439   1      lcd_data(2);
+ 440   1      delay(10);
+ 441   1      
+ 442   1      lcd_cmd(88);
+ 443   1      lcd_data(0);
+ 444   1      lcd_data(0);
+ 445   1      lcd_data(4);
+ 446   1      lcd_data(4);
+ 447   1      lcd_data(4);
+ 448   1      lcd_data(4);
+ 449   1      lcd_data(4);
+ 450   1      lcd_data(28);
+ 451   1      lcd_cmd(0x84);
+ 452   1      lcd_data(3);
+ 453   1      delay(10);
+ 454   1      }
+ 455           void ab9()
+ 456          {
+ 457   1       lcd_cmd(0x38);
+ 458   1      lcd_cmd(0x0e);
+ 459   1      //delay(sec);
+ 460   1      lcd_cmd(0x01);
+ 461   1      //delay(sec);
+ 462   1      lcd_cmd(0x82);
+ 463   1      //delay(sec);
+ 464   1      lcd_cmd(64);  //Address where values of the first custom character is stored
+ 465   1      lcd_data(24);
+ 466   1      lcd_data(24);
+ 467   1      lcd_data(8);
+ 468   1      lcd_data(24);
+ 469   1      lcd_data(16);
+ 470   1      lcd_data(21);
+ 471   1      lcd_data(21);
+ 472   1      lcd_data(31);
+ 473   1      lcd_cmd(0xC0);  //Address of the location where the character is to be displayed
+ 474   1      lcd_data(0);  // Displaying the character created at address 0x64 
+ 475   1      delay(10);
+ 476   1      
+ 477   1      lcd_cmd(72);
+ 478   1      lcd_data(0);
+ 479   1      lcd_data(0);
+ 480   1      lcd_data(0);
+ 481   1      lcd_data(0);
+ 482   1      lcd_data(0);
+ 483   1      lcd_data(14);
+ 484   1      lcd_data(10);
+ 485   1      lcd_data(14);
+ 486   1      lcd_cmd(0x80);
+ 487   1      lcd_data(1);
+ 488   1      delay(10);
+ 489   1      
+C51 COMPILER V9.00   ABCD                                                                  05/03/2012 20:10:45 PAGE 9   
+
+ 490   1      lcd_cmd(80);
+ 491   1      lcd_data(25);
+ 492   1      lcd_data(25);
+ 493   1      lcd_data(9);
+ 494   1      lcd_data(29);
+ 495   1      lcd_data(21);
+ 496   1      lcd_data(21);
+ 497   1      lcd_data(21);
+ 498   1      lcd_data(31);
+ 499   1      lcd_cmd(0x82);
+ 500   1      lcd_data(2);
+ 501   1      delay(10);
+ 502   1      
+ 503   1      lcd_cmd(88);
+ 504   1      lcd_data(4);
+ 505   1      lcd_data(28);
+ 506   1      lcd_data(4);
+ 507   1      lcd_data(4);
+ 508   1      lcd_data(29);
+ 509   1      lcd_data(5);
+ 510   1      lcd_data(5);
+ 511   1      lcd_data(31);
+ 512   1      lcd_cmd(0x84);
+ 513   1      lcd_data(3);
+ 514   1      delay(10);
+ 515   1      }
+ 516          ab10()
+ 517          {
+ 518   1      int i=0;
+ 519   1      for(i=0;i<12;i++)
+ 520   1      {
+ 521   2        lcd_cmd(0x1C);  //Shift the entire display to right
+ 522   2        delay(75);
+ 523   2      }
+ 524   1      }
+ 525          void display(int a) //Display functon for LCD
+ 526          
+ 527          {
+ 528   1      switch(a)
+ 529   1      {
+ 530   2        case 1:ab1();
+ 531   2          break;
+ 532   2        case 2:ab2();
+ 533   2          break;
+ 534   2        case 3:ab3();
+ 535   2          break;
+ 536   2        case 4:ab4();
+ 537   2          break;
+ 538   2        case 5:ab5();
+ 539   2          break;
+ 540   2        case 6:ab6();
+ 541   2          break;
+ 542   2        case 7:ab7();
+ 543   2          break;
+ 544   2        case 8:ab8();
+ 545   2          break;
+ 546   2        case 9:ab9();
+ 547   2          break;
+ 548   2        case 0:ab10();
+ 549   2          break;
+ 550   2        case 11:lcd("*");
+ 551   2          break;
+C51 COMPILER V9.00   ABCD                                                                  05/03/2012 20:10:45 PAGE 10  
+
+ 552   2        case 12:lcd("#");
+ 553   2          break;
+ 554   2      }
+ 555   1      }
+ 556          
+ 557          void check_col1() //Function for checking column one
+ 558          {
+ 559   1      row1=row2=row3=row4=1;
+ 560   1      row1=0;
+ 561   1      if(col1==0)
+ 562   1      display(1);
+ 563   1      row1=1;
+ 564   1      row2=0;
+ 565   1      if(col1==0)
+ 566   1      display(4);
+ 567   1      row2=1;
+ 568   1      row3=0;
+ 569   1      if(col1==0)
+ 570   1      display(7);
+ 571   1      row3=1;
+ 572   1      row4=0;
+ 573   1      if(col1==0)
+ 574   1      display(11); 
+ 575   1      row4=1;
+ 576   1      }
+ 577          
+ 578          void check_col2() //Function for checking column two
+ 579          {
+ 580   1      row1=row2=row3=row4=1;
+ 581   1      row1=0;
+ 582   1      if(col2==0)
+ 583   1      display(2);
+ 584   1      row1=1;
+ 585   1      row2=0;
+ 586   1      if(col2==0)
+ 587   1      display(5);
+ 588   1      row2=1;
+ 589   1      row3=0;
+ 590   1      if(col2==0)
+ 591   1      display(8);
+ 592   1      row3=1;
+ 593   1      row4=0;
+ 594   1      if(col2==0)
+ 595   1      display(0);
+ 596   1      row4=1;
+ 597   1      }
+ 598          
+ 599          void check_col3() //Function for checking column three
+ 600          {
+ 601   1      row1=row2=row3=row4=1;
+ 602   1      row1=0;
+ 603   1      if(col3==0)
+ 604   1      display(3);
+ 605   1      row1=1;
+ 606   1      row2=0;
+ 607   1      if(col3==0)
+ 608   1      display(6);
+ 609   1      row2=1;
+ 610   1      row3=0;
+ 611   1      if(col3==0)
+ 612   1      display(9);
+ 613   1      row3=1;
+C51 COMPILER V9.00   ABCD                                                                  05/03/2012 20:10:45 PAGE 11  
+
+ 614   1      row4=0;
+ 615   1      if(col3==0)
+ 616   1      display(12);  //For #
+ 617   1      row4=1;
+ 618   1      }
+ 619          
+ 620          void main()
+ 621          {
+ 622   1      col1=col2=col3=1;  //Input Port
+ 623   1      while(1)
+ 624   1      {
+ 625   2        row1=row2=row3=row4=0;
+ 626   2        if(col1==0)
+ 627   2        check_col1();
+ 628   2        else
+ 629   2         if(col2==0)
+ 630   2         check_col2();
+ 631   2         else
+ 632   2          if(col3==0)
+ 633   2          check_col3();
+ 634   2      }
+ 635   1      }
+*** WARNING C290 IN LINE 524 OF ABCD.C: missing return value
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1772    ----
+   CONSTANT SIZE    =      4    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
